@@ -10,26 +10,29 @@ export async function createUser(user: {
   gender: string;
   status: string;
 }) {
-  const response = await request(BASE_URL)
-    .post("/users")
-    .set("Authorization", `Bearer ${TOKEN}`)
-    .send(user);
-
-  if (response.status !== 201) {
-    throw new Error(`Failed to create user: ${response.statusCode}`);
+  const respond = await makeRequest("post", "/users", user);
+  if (respond.id == null) {
+    throw Error(      "respond is wrong: "+respond
+    );
   }
-
-  return response.body;
+  return respond;
 }
 
 export async function deleteUser(userId: number) {
-  const response = await request(BASE_URL)
-    .delete(`/users/${userId}`)
-    .set("Authorization", `Bearer ${TOKEN}`);
+  return makeRequest("delete", `/users/${userId}`);
 
-  if (response.status !== 204) {
-    throw new Error(`Failed to delete user: ${response.statusCode}`);
-  }
+}
+
+export async function getUserDetails(userId: number) {
+  const response = await makeRequest("get", `/users/${userId}`);
+  if (response == null) {
+    throw Error("respond is wrong: "+response
+    );  }
+  return response;
+}
+
+export async function readUsrArray() {
+  return makeRequest("get", `/users`);
 }
 
 export async function createUniqueUser() {
@@ -40,4 +43,24 @@ export async function createUniqueUser() {
     status: "active",
   };
   return await createUser(newUser);
+}
+
+export async function makeRequest(
+  method: "get" | "post" | "put" | "delete",
+  endpoint: string,
+  data?: any
+) {
+  let req_send = request(BASE_URL)
+    [method](endpoint)
+    .set("Authorization", `Bearer ${TOKEN}`);
+  if (data) {
+    req_send = req_send.send(data);
+  }
+  const response = await req_send;
+  if (response.statusCode==404) {
+    throw new Error(
+      "Failed to fetch user: 404"
+    );
+  }
+  return response.body;
 }
