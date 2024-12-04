@@ -4,7 +4,6 @@ dotenv.config();
 const BASE_URL = "https://gorest.co.in/public/v2";
 const TOKEN = process.env.GOREST_TOKEN;
 if (!TOKEN) { throw new Error('GOREST_TOKEN is not defined in the environment variables'); }
-  ;
 
 export async function createUser(user: {
   name: string;

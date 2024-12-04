@@ -30,8 +30,17 @@ This file contains utility functions for user creation and deletion.
 This file contains the tests for creating, reading, verifying, and deleting user data, along with proper cleanup.
 
 ### Running Tests
-To run the tests, use the following command:
-npx jest
+To run the tests on github pipeline, please rerun existing jobs, or do a push
+To run it locally, please
+1.  install dotenv:
+    npm install dotenv
+2. create .env file on project root
+3. add tocken to .env file (token is sent via mail with link to pipeline):
+    GOREST_TOKEN=your-token-here
+
+
+after that, to run the test localy, please run 
+npm test
 This command will execute all the tests and provide the results in the terminal.
 
 ## Configuration
