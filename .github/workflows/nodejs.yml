@@ -24,6 +24,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm install
+      - name: Set up environment variables
+        run: echo "GOREST_TOKEN=${{ secrets.GOREST_TOKEN }}" >> $GITHUB_ENV
       - name: Run tests
         run: npm test
       - name: Upload test results

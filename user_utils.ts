@@ -1,8 +1,9 @@
 import request from "supertest";
 
 const BASE_URL = "https://gorest.co.in/public/v2";
-const TOKEN =
-  "e244a0fb62b368b5191c24a5847429cb58eea1c0707ecf515ded41e9e47f566a";
+const TOKEN = process.env.GOREST_TOKEN;
+if (!TOKEN) { throw new Error('GOREST_TOKEN is not defined in the environment variables'); }
+
 
 export async function createUser(user: {
   name: string;
@@ -12,22 +13,20 @@ export async function createUser(user: {
 }) {
   const respond = await makeRequest("post", "/users", user);
   if (respond.id == null) {
-    throw Error(      "respond is wrong: "+respond
-    );
+    throw Error("respond is wrong: " + respond);
   }
   return respond;
 }
 
 export async function deleteUser(userId: number) {
   return makeRequest("delete", `/users/${userId}`);
-
 }
 
 export async function getUserDetails(userId: number) {
   const response = await makeRequest("get", `/users/${userId}`);
   if (response == null) {
-    throw Error("respond is wrong: "+response
-    );  }
+    throw Error("respond is wrong: " + response);
+  }
   return response;
 }
 
@@ -57,10 +56,8 @@ export async function makeRequest(
     req_send = req_send.send(data);
   }
   const response = await req_send;
-  if (response.statusCode==404) {
-    throw new Error(
-      "Failed to fetch user: 404"
-    );
+  if (response.statusCode == 404) {
+    throw new Error("Failed to fetch user: 404");
   }
   return response.body;
 }
